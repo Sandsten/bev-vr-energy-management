@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7395032343011146177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7395032343011146180}
+  - component: {fileID: 7395032343011146183}
+  - component: {fileID: 7395032343011146182}
+  - component: {fileID: 326058532}
+  m_Layer: 0
+  m_Name: SessionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7395032343011146180
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7395032343011146177}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 141.58438, y: 151.59525, z: 0.18463135}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7395032343011146183
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7395032343011146177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1260d94319ec6a459ed0c21d3f9539d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  userID: 12
+  eVIS: 0
+  battery: {fileID: 0}
+  startingStateOfCharge: 1.3
+  statusText: {fileID: 0}
+  timer: {fileID: 0}
+  regularDashboard: {fileID: 0}
+  diffDrivingRangeDashboard: {fileID: 0}
+  elapsedTime: 0
+  isSessionRunning: 0
+--- !u!114 &7395032343011146182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7395032343011146177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf8942ce4fd4ef140a45ae36bef4be60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  saveLocation: userStudies
+  saveFrequency: 10
+  car: {fileID: 0}
+  battery: {fileID: 0}
+  userInput: {fileID: 0}
+--- !u!114 &326058532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7395032343011146177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc55daba6ebf1e41abbee539dbc8eb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  car: {fileID: 0}
+  startPosition: {fileID: 0}
+  higwayPosition: {fileID: 0}
+  debug: {fileID: 0}
