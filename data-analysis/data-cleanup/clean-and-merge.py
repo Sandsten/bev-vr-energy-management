@@ -2,9 +2,15 @@ import pandas as pd
 import glob
 from colorama import Fore, Back, Style
 import os
+import sys
+
+platform = sys.platform
 
 # Get the paths to all uncleaned csv files
-all_files = glob.glob('..\\raw-data\\*.csv')
+if platform == "linux":
+    all_files = sorted(glob.glob('../raw-data/*.csv'))
+else:
+    all_files = sotred(glob.glob('..\\raw-data\\*.csv'))
 
 cleanedDataFrames = []
 
@@ -54,12 +60,18 @@ def mergeCSVFilesToOne():
         str(first_id) + "_to_" + str(last_id) + ".csv"
 
     # Save the merged data into a new .csv file
-    df.to_csv('.\\merged-cleaned-csv\\' + merged_file_name, index=False, encoding='utf-8-sig')
+    if platform == "linux":
+        df.to_csv('./merged-cleaned-csv/' + merged_file_name, index=False, encoding='utf-8-sig')
+    else:
+        df.to_csv('./merged-cleaned-csv/' + merged_file_name, index=False, encoding='utf-8-sig')
     print(" OK")
     
-    print("Path to file: " + Fore.YELLOW + Style.BRIGHT + os.path.abspath('.\\merged-cleaned-csv') + Style.RESET_ALL)
+    if platform == "linux":
+        print("Path to file: " + Fore.YELLOW + Style.BRIGHT + os.path.abspath('./merged-cleaned-csv') + Style.RESET_ALL)
+    else:
+        print("Path to file: " + Fore.YELLOW + Style.BRIGHT + os.path.abspath('.\\merged-cleaned-csv') + Style.RESET_ALL)
+    
     print("New file: " + Fore.GREEN + Style.BRIGHT + merged_file_name + Style.RESET_ALL)
-
     print(Fore.CYAN + Style.BRIGHT + "Thank you for using our cleaning and merging services!" + Style.RESET_ALL)
 
 cleanTheData()
