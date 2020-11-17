@@ -10,8 +10,8 @@ The simulator is developed using Unity where I've implemented a drivable vehicle
 
 The analysis was previously done using Matlab but has later been transferred over to Python and Jupyter notebooks.
 
-Here are two videos showing what it looks like whilst driving using both EVIS.
-Conventional EVIS: https://youtu.be/T2p7Rt-5WcI
-Novel EVIS: https://youtu.be/_AtB8SAgGx0
+Here are two videos showing what it looks like whilst driving using both EVIS.  
+Conventional EVIS: https://youtu.be/T2p7Rt-5WcI  
+Novel EVIS: https://youtu.be/_AtB8SAgGx0  
 
 Thesis: https://www.diva-portal.org/smash/record.jsf?pid=diva2:1469206
