@@ -68,7 +68,7 @@ public class SessionManager : MonoBehaviour
 
         elapsedTime = Time.time - m_startTime;
 
-        timer.text = elapsedTime.ToString();
+        timer.text = elapsedTime.ToString("F1");
 
         info.text = "User ID: " + userID + "\n" 
                    + "Distance: " + battery.distanceTraveled.ToString("F0") + "m";
