@@ -8,15 +8,8 @@ using UnityEngine;
 [RequireComponent(typeof(DataCollector))]
 public class SessionManager : MonoBehaviour
 {
-    // Electric vehicle information system (EVIS)
-    public enum EVIS
-    {
-        DiffAndCOPE1,
-        GuessOMeter
-    }
-
     public string userID;
-    public EVIS eVIS;
+    public EVISType eVIS;
     public Battery battery;
     [Tooltip("Decide which state-of-charge to start at")]
     [HideInInspector]public float startingStateOfCharge = 1.3f;
@@ -29,6 +22,7 @@ public class SessionManager : MonoBehaviour
     [Header("Dashboards")]
     public GameObject regularDashboard;
     public GameObject diffDrivingRangeDashboard;
+    public GameObject controlGroupDashboard;
 
     [HideInInspector]
     public float elapsedTime; // Time in session
@@ -50,12 +44,12 @@ public class SessionManager : MonoBehaviour
 
         startingStateOfCharge = battery.stateOfCharge;
 
-        if (eVIS == EVIS.DiffAndCOPE1)
+        if (eVIS == EVISType.DiffAndCOPE1)
         {
             regularDashboard.SetActive(false);
             diffDrivingRangeDashboard.SetActive(true);
         }
-        else if (eVIS == EVIS.GuessOMeter)
+        else if (eVIS == EVISType.GuessOMeter || eVIS == EVISType.ControlGroup)
         {
             regularDashboard.SetActive(true);
             diffDrivingRangeDashboard.SetActive(false);

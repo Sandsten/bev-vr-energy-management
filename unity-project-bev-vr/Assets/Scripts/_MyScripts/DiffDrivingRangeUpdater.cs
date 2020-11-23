@@ -37,9 +37,8 @@ public class DiffDrivingRangeUpdater : MonoBehaviour
     public Text energyLeftText;
     public Image batteryIcon;
 
-    [Header("Session Manager")]
-    public SessionManager sessionManager;
-
+    // [Header("Session Manager")]
+    // public SessionManager sessionManager;
 
     float m_IntermediateLinesThickness = 1f;
     float m_startPos = 0;

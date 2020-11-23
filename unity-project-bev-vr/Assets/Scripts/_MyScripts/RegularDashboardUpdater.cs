@@ -21,6 +21,13 @@ public class RegularDashboardUpdater : MonoBehaviour
 
     public Battery battery;
     public Rigidbody car;
+    
+    [Header("EVIS type specifics")]
+    public GameObject includedInControlGroup;
+    public GameObject excludedInControlGroup;
+
+    [Header("Session Manager")]
+    public SessionManager sessionManager;
 
     // [Header("Power bar")]
     // public RectTransform powerBarPos;
@@ -49,14 +56,16 @@ public class RegularDashboardUpdater : MonoBehaviour
     float m_distanceLeftToTarget;
 
     bool m_isBatteryEmpty = false;
-
     float m_prevPower = 0;
+
+    bool m_isThisControlGroup = false;
 
     void Awake()
     {
         // m_totalDistance = m_previousDistanceTraveled;
         // m_totalAmountOfEnergyConsumed = m_previousEnergyConsumed;
-        m_averageEnergyConsumptionPerKM = m_totalAmountOfEnergyConsumed / m_totalDistance; // [kWh/km]
+        m_averageEnergyConsumptionPerKM = m_totalAmountOfEnergyConsumed / m_totalDistance; // [kWh/km]'
+        m_isThisControlGroup = sessionManager.eVIS == EVISType.ControlGroup;
     }
 
     // Start is called before the first frame update
@@ -91,7 +100,16 @@ public class RegularDashboardUpdater : MonoBehaviour
 
         // kWh - how many kilowatt hours have been consumed
         UpdateTargetDistance(1);
+        
+        // If this is the control group, enable trip and odo meter. Hide left & traveled
+        includedInControlGroup.SetActive(m_isThisControlGroup);
+        excludedInControlGroup.SetActive(!m_isThisControlGroup);
 
+        // Also allow for resetting of the trip meter if the participant whishes to do so
+        if(sessionManager.eVIS == EVISType.ControlGroup) 
+        {
+            
+        }
     }
 
     private void OnDestroy()
@@ -130,6 +148,18 @@ public class RegularDashboardUpdater : MonoBehaviour
         }
     }
 
+    // CONTROL GROUP VISUALS //
+    void UpdateODOAndTripMeters() 
+    {
+
+    }
+
+    void ResetODOMeter() 
+    {
+
+    }
+
+    
     void UpdatePowerUsage()
     {   
         float power = battery.power;
@@ -188,7 +218,6 @@ public class RegularDashboardUpdater : MonoBehaviour
         rangeEstimateText.text = rangeEstimate.ToString("f0");
     }
 
-
     void UpdateDistanceTraveled()
     {
         m_totalDistanceTraveled += (car.transform.position - m_prevPosition).magnitude;
@@ -213,5 +242,6 @@ public class RegularDashboardUpdater : MonoBehaviour
 
         targetDistanceText.text = "Target: " + m_targetDistance.ToString("F1");
     }
+
 
 }
