@@ -19,4 +19,7 @@ public class Variables
   public float xPosition { get; set; } // Horizontal
   public float yPosition { get; set; } // Vertical 
   public float zPosition { get; set; } // Horizontal
+
+  public float tripMeter { get; set; }
+  public float odoMeter { get; set; }
 }

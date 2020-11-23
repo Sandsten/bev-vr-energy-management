@@ -22,7 +22,6 @@ public class SessionManager : MonoBehaviour
     [Header("Dashboards")]
     public GameObject regularDashboard;
     public GameObject diffDrivingRangeDashboard;
-    public GameObject controlGroupDashboard;
 
     [HideInInspector]
     public float elapsedTime; // Time in session

@@ -65,7 +65,10 @@ public class DataCollector : MonoBehaviour
 
       xPosition = car.gameObject.transform.position.x,
       yPosition = car.gameObject.transform.position.y,
-      zPosition = car.gameObject.transform.position.z
+      zPosition = car.gameObject.transform.position.z,
+
+      odoMeter = m_regularDashboardUpdater.m_odoMeter,
+      tripMeter = m_regularDashboardUpdater.m_tripMeter,
     };
 
     // Save the data for this frame
