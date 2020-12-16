@@ -11,6 +11,9 @@ public class CarPositionHelper : MonoBehaviour
     public Transform higwayPosition;
     public Transform debug;
 
+    [Header("Battery script")]
+    public Battery battery;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,6 +29,8 @@ public class CarPositionHelper : MonoBehaviour
     public void MoveCarToStartPosition()
     {
         car.transform.SetPositionAndRotation(startPosition.position, startPosition.rotation);
+        // Reset the car's previous position too
+        battery.prevPosition = car.transform.position;
     }
 
     public void MoveCarToHighwayPosition()

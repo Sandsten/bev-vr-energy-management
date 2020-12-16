@@ -5,13 +5,10 @@ using UnityStandardAssets.Vehicles.Car;
 public class Battery : MonoBehaviour
 {
     public float batterycapacity = 20f; // kWh
-                                        //float speed = 0f;
-                                        //float drag = 0.4f;
-                                        //float rollingresistance = 0.4f;
 
-    public float stateOfCharge = 5f;
+    public float stateOfCharge = 1.2f;
     public bool hasBattery = true;
-    Vector3 prevPosition;
+    [HideInInspector] public Vector3 prevPosition;
     float lastVelocity = 0;
     float lastAltitude = 0;
     public float distanceTraveled = 0f;
@@ -41,25 +38,19 @@ public class Battery : MonoBehaviour
     [SerializeField]
     Transform car;
 
-    float interval = 0.1f;
+    float interval = 0.1f; // How often the car's battery should update
     float nextTime = 0;
 
     float fa, fr, fs, fd, faux = 0f;
 
-    // evenergy
-    //var evenergy,
-    //float speed = undefined, 
-    //time = undefined, 
-    //float distance = undefined,
-    //soc = undefined,
-    //float acceleration = 0; // acceleration
+    //float mass = 1600; // Vehicle mass. (Set by the cars rigidbody instead)
     float slope = 0; // slope
-                     //mass = 1521, // vehicle mass
     float cr = 0.012f; // vehicle roll resistance coefficient
     float cd = 0.29f; // vehicle drag coefficient
     float area = 2.7435f; // vehicle frontal area
     float r = 1.225f; // air density
     float g = 9.82f; // gravity
+
     [Range(0, 1)]
     public float efficiencyEnergyOut = 0.87f; // efficiency
     [Range(0, 1)]
@@ -97,31 +88,41 @@ public class Battery : MonoBehaviour
 
             nextTime += interval;
 
-            allForces.text = "Acceleration resistance: " + (int)fa + "kg m/s^2" + "\n" +
-                             "Rolling resistance: " + (int)fr + "kg m/s^2" + "\n" +
-                             "Drag resistance: " + (int)fd + "kg m/s^2" + "\n" +
-                             "Slope resistance: " + (int)fs + "kg m/s^2" + "\n" +
-                             "Aux power: " + (int)(faux * 1000) + "Watts" + "\n";
+            // Add to total distance traveled
+            float dist = Vector3.Distance(prevPosition, car.transform.position);
+            distanceTraveled += dist;
 
-            m_outdoortemp.text = "Outdoor temp: " + outdoortemp.ToString() + "C";
+            prevPosition = car.transform.position;
+
+            // TODO: Should store these data values too!
+            //allForces.text = "Acceleration resistance: " + (int)fa + "kg m/s^2" + "\n" +
+            //                 "Rolling resistance: " + (int)fr + "kg m/s^2" + "\n" +
+            //                 "Drag resistance: " + (int)fd + "kg m/s^2" + "\n" +
+            //                 "Slope resistance: " + (int)fs + "kg m/s^2" + "\n" +
+            //                 "Aux power: " + (int)(faux * 1000) + "Watts" + "\n";
+
+            //m_outdoortemp.text = "Outdoor temp: " + outdoortemp.ToString() + "C";
         }
     }
 
+    /// <summary>
+    /// Top level function for managing energy going in or out of our battery.
+    /// </summary>
     void Burn()
     {
         if (hasBattery)
         {
-            float enrg = energy(); // kWh. When negative it means we are regenerating
+            float enrg = energy(); // kWh
             stateOfCharge -= enrg;
             totalEnergyUsage += enrg;
         }
 
-        // Don't overfill the battery!
+        // Prevent battery from charging more than its capacity
         if (stateOfCharge > batterycapacity)
             stateOfCharge = batterycapacity;
 
-        // Allow the user to continue driving even if the battery is empty
-        // Let the state of charge get into the negative range since it's interesting to see how far off the user was
+        // When the battery is empty notify all subscribers
+        // TODO: Allow the driver to use the cars remaining momentum or charge if going downhill. Even if the battery is empty.
         if (stateOfCharge <= 0)
         {
             // Notify all listeners that the battery is empty
@@ -129,24 +130,24 @@ public class Battery : MonoBehaviour
             hasBattery = false;
         }
 
-        // Add to total distance traveled
-        float dist = Vector3.Distance(prevPosition, car.transform.position);
-        distanceTraveled += dist;
+        //float vel = car_rb.velocity.magnitude * 3.6f;
+        //if (m_BatteryLeft != null) m_BatteryLeft.text = stateOfCharge.ToString("F3") + " kWh";
+        //if (m_Velocity != null) m_Velocity.text = (string)((int)vel).ToString() + " km/h";
+        //if (m_distancetraveled != null) m_distancetraveled.text = (distanceTraveled / 1000f).ToString("F2") + "km";
 
-        //print("Total distance: " + distanceTraveled);
-        //print("kWh/km: " + (20-batterycapacity)/(distanceTraveled/1000));
-
-        float vel = car_rb.velocity.magnitude * 3.6f;
-        if (m_BatteryLeft != null) m_BatteryLeft.text = stateOfCharge.ToString("F3") + " kWh";
-        if (m_Velocity != null) m_Velocity.text = (string)((int)vel).ToString() + " km/h";
-        if (m_distancetraveled != null) m_distancetraveled.text = (distanceTraveled / 1000f).ToString("F2") + "km";
-
-        // Battery used divided by distance traveled in km
-        if (m_kwhkm != null) m_kwhkm.text = ((batterycapacity - stateOfCharge) / (distanceTraveled / 1000)).ToString("F3") + "kWh/km";
-
-        prevPosition = car.transform.position;
+        //// Battery used divided by distance traveled in km
+        //if (m_kwhkm != null) m_kwhkm.text = ((batterycapacity - stateOfCharge) / (distanceTraveled / 1000)).ToString("F3") + "kWh/km";
     }
-
+    
+    /// <summary>
+    /// Returns the force required for traveling at the given speed.
+    /// The forces taken into account are: Acceleration, Slope, Rolling resistance and Drag.
+    /// Set ignoreAccAndSlope to true if you want to calculate the required force when maintaining a certain speed on a flat road. 
+    /// We use this for calculating the green vertical bars in the novel dashboard.
+    /// </summary>
+    /// <param name="speed"></param>
+    /// <param name="ignoreAccAndSlope"></param>
+    /// <returns>Total force acting upon the vehicle in kg m/s^2</returns>
     float totalForce(float speed, bool ignoreAccAndSlope)
     {
         // nothing is pulling power from battery since the vehicle is in the air
@@ -160,48 +161,45 @@ public class Battery : MonoBehaviour
 
         // In the initial prediction at each speed, we do not account for acceleration or slope. It's constant speed on a flat surface
         float acceleration = 0;
-        if (!ignoreAccAndSlope)
+        if(ignoreAccAndSlope)
         {
+            fa = fs = 0f;
+        }
+        else
+        {
+            // Calculate the acceleration and interpolate it to make it less volatile
             acceleration = (speed - lastVelocity) / interval;
             acceleration = Mathf.Lerp(m_prevAcceleration, acceleration, Time.deltaTime * 10);
 
-            // acceleration = Mathf.Lerp(acceleration, (speed - lastVelocity) / interval, interval * 100f);
-            lastVelocity = speed;
-
-            m_prevAcceleration = acceleration;
-
-            //* Acceleration resistance
-            // fa = Mathf.Lerp(fa, acceleration * mass, Time.deltaTime * 10);
+            // Acceleration
             fa = acceleration * mass; // kg m/s^2
             if (fa < 0)
                 fa = fa * efficiencyEnergyIn * efficiencyEnergyIn; // If negative acceleration, the acceleration resistance is less
 
-            //* Slope resistance
-            slope = car_rb.position.y - lastAltitude; // Slope is the difference in height
+            // Slope
+            slope = car_rb.position.y - lastAltitude;
             fs = slope * g * mass; // kg m/s^2
 
+            lastVelocity = speed;
+            m_prevAcceleration = acceleration;
             lastAltitude = car_rb.position.y;
         }
-        else
-        {
-            fa = fs = 0f;
-        }
-
-        // add 
+        
+        // Rolling resistance constants
         //0.0062 to 0.015[26]		Car tire measurements
         //0.010 to 0.015[27]		Ordinary car tires on concrete
         //0.0385 to 0.073[28]		Stage coach (19th century) on dirt road. Soft snow on road for worst case.
         //0.3[27]		Ordinary car tires on sand
-        //* Roll resistance
         if (speed > 0.001f)
             fr = cr * g * mass; // kg m/s^2
         else
             fr = 0f;
 
-        //* Wind resistance a.k.a. drag
+        // Wind resistance a.k.a. drag
         // 1/2 * air density * vehicle drag coefficient * frontal area * speed^2
         fd = 0.5f * r * cd * area * speed * speed; // kg m/s^2
-
+        
+        // Total force acting upon vehicle
         float total = fa + fs + fr + fd;
 
         return total;  // kg m/s^2

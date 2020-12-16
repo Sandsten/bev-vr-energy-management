@@ -161,6 +161,12 @@ public class RegularDashboardUpdater : MonoBehaviour
     }
 
     // CONTROL GROUP VISUALS //
+    /*
+        Nissan Leaf's trip meter can store distance of two trips and has can be resetted by holding down the trip selection button.
+        Here we only have a single trip meter and below 
+        https://www.youtube.com/watch?v=DEaLauuOw9o
+    */
+
     void UpdateODOAndTripMeters() 
     {   
         // Delta distance is in meters
